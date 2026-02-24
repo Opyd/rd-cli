@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"rd-cli/api"
 	"rd-cli/config"
+	"rd-cli/downloader"
 
 	"github.com/spf13/cobra"
 )
@@ -23,6 +24,8 @@ Examples:
 
 		link := args[0]
 
+		name, _ := cmd.Flags().GetString("name")
+
 		config, err := config.GetConfig()
 
 		if err != nil {
@@ -37,10 +40,29 @@ Examples:
 			cobra.CheckErr(err)
 		}
 
-		fmt.Println(downloadLink)
+		if name == "" {
+			name = downloadLink.Filename
+		}
+
+		filePath := "."
+
+		if len(args) == 2 {
+			filePath = args[1]
+		}
+
+		downloder := downloader.NewDownloader()
+
+		fmt.Println(downloadLink.Download)
+
+		err = downloder.Download(downloadLink.Download, filePath, name)
+
+		if err != nil {
+			cobra.CheckErr(err)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(downloadCmd)
+	downloadCmd.Flags().StringP("name", "n", "", "Custom filename")
 }

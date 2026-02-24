@@ -18,15 +18,16 @@ func NewClient(token string) *Client {
 	return &c
 }
 
-func (c *Client) UnrestrictLink(link string) (string, error) {
+func (c *Client) UnrestrictLink(link string) (UnrestrictLinkResponse, error) {
 	v := url.Values{}
+	response := UnrestrictLinkResponse{}
 
 	v.Set("link", link)
 
 	req, err := http.NewRequest("POST", RD_URL+UNRESTRICT_PATH, strings.NewReader(v.Encode()))
 
 	if err != nil {
-		return "", err
+		return response, err
 	}
 
 	req.Header.Set("Authorization", "Bearer "+c.accessToken)
@@ -35,20 +36,18 @@ func (c *Client) UnrestrictLink(link string) (string, error) {
 	res, err := c.httpClient.Do(req)
 
 	if err != nil {
-		return "", err
+		return response, err
 	}
 
 	defer res.Body.Close()
 
-	response := UnrestrictLinkResponse{}
-
 	body, err := io.ReadAll(res.Body)
 
 	if err != nil {
-		return "", err
+		return response, err
 	}
 
 	err = json.Unmarshal(body, &response)
 
-	return response.Download, nil
+	return response, nil
 }
