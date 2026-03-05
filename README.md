@@ -44,6 +44,17 @@ rd-cli download <url>
 | `get-config` | Display current configuration |
 | `download <url>` | Unrestrict and download a file |
 
+## Roadmap
+
+- [x] Unrestrict link via Real-Debrid API
+- [x] Download file with progress bar
+- [x] Custom filename via `--name` flag
+- [x] Custom output path as second argument
+- [ ] `--path` flag instead of positional argument
+- [ ] Batch downloading (multiple links from file)
+- [ ] Retry on network error with exponential backoff
+- [ ] Resume interrupted downloads (HTTP Range header)
+
 ## License
 
 MIT

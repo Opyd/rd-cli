@@ -24,7 +24,7 @@ func (c *Client) UnrestrictLink(link string) (UnrestrictLinkResponse, error) {
 
 	v.Set("link", link)
 
-	req, err := http.NewRequest("POST", RD_URL+UNRESTRICT_PATH, strings.NewReader(v.Encode()))
+	req, err := http.NewRequest("POST", RdUrl+UnrestrictPath, strings.NewReader(v.Encode()))
 
 	if err != nil {
 		return response, err

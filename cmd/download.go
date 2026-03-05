@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"rd-cli/api"
 	"rd-cli/config"
 	"rd-cli/downloader"
@@ -50,11 +49,9 @@ Examples:
 			filePath = args[1]
 		}
 
-		downloder := downloader.NewDownloader()
+		downloader := downloader.NewDownloader()
 
-		fmt.Println(downloadLink.Download)
-
-		err = downloder.Download(downloadLink.Download, filePath, name)
+		err = downloader.Download(downloadLink.Download, filePath, name)
 
 		if err != nil {
 			cobra.CheckErr(err)

@@ -11,7 +11,7 @@ func createFolder() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fullPath := filepath.Join(configPath, CONFIG_FOLDER)
+	fullPath := filepath.Join(configPath, ConfigFolder)
 
 	err = os.MkdirAll(fullPath, 0700)
 	if err != nil {

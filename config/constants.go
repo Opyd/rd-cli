@@ -1,5 +1,5 @@
 package config
 
-const CONFIG_FOLDER = "rd-cli"
+const ConfigFolder = "rd-cli"
 
-const CONFIG_FILE_NAME = "user-config.json"
+const ConfigFileName = "user-config.json"

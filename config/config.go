@@ -18,7 +18,7 @@ func SetToken(token string) error {
 		return err
 	}
 
-	err = os.WriteFile(filepath.Join(path, CONFIG_FILE_NAME), bytes, 0700)
+	err = os.WriteFile(filepath.Join(path, ConfigFileName), bytes, 0700)
 
 	if err != nil {
 		return err
@@ -35,7 +35,7 @@ func GetConfig() (UserConfigJSON, error) {
 		return userConfig, err
 	}
 
-	configFile, err := os.ReadFile(filepath.Join(configPath, CONFIG_FOLDER, CONFIG_FILE_NAME))
+	configFile, err := os.ReadFile(filepath.Join(configPath, ConfigFolder, ConfigFileName))
 
 	if err != nil {
 		return userConfig, err
