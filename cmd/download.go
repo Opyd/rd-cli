@@ -43,15 +43,11 @@ Examples:
 			name = downloadLink.Filename
 		}
 
-		filePath := "."
-
-		if len(args) == 2 {
-			filePath = args[1]
-		}
+		path, _ := cmd.Flags().GetString("path")
 
 		downloader := downloader.NewDownloader()
 
-		err = downloader.Download(downloadLink.Download, filePath, name)
+		err = downloader.Download(downloadLink.Download, path, name)
 
 		if err != nil {
 			cobra.CheckErr(err)
@@ -62,4 +58,5 @@ Examples:
 func init() {
 	rootCmd.AddCommand(downloadCmd)
 	downloadCmd.Flags().StringP("name", "n", "", "Custom filename")
+	downloadCmd.Flags().StringP("path", "p", ".", "Custom download path")
 }
