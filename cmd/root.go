@@ -18,8 +18,11 @@ It unrestricts links from supported file hosters (e.g. Rapidgator, 1Fichier)
 and downloads them at full speed using your Real-Debrid account.
 
 Examples:
-  rd-cli set-token                  # configure your API token interactively
-  rd-cli download <url>             # unrestrict and download a file`,
+  rd-cli set-token                               # configure your API token interactively
+  rd-cli download <url>                          # unrestrict and download a file
+  rd-cli download <url> -p ~/Downloads           # download to specific directory
+  rd-cli download <url> -n movie.mkv             # custom filename
+  rd-cli download -f links.txt -p ~/Downloads    # batch download from file`,
 }
 
 func Execute() {

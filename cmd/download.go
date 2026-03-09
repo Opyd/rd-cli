@@ -18,7 +18,9 @@ var downloadCmd = &cobra.Command{
 
 Examples:
   rd-cli download https://rapidgator.net/file/example
-  rd-cli download https://1fichier.com/?abc123`,
+  rd-cli download https://1fichier.com/?abc123 -n movie.mkv
+  rd-cli download https://rapidgator.net/file/example -p ~/Downloads
+  rd-cli download -f links.txt -p ~/Downloads`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var err error
 		var hadErrors bool

@@ -39,11 +39,27 @@ Your token is saved to `user-config.json` in the OS user config directory:
 ### Download a file
 
 ```sh
-rd-cli download <url>                        # download to current directory
-rd-cli download <url> /path/to/dir           # download to specific directory
-rd-cli download <url> -n filename.mkv        # custom filename
-rd-cli download <url> /path/to/dir -n file   # both
+rd-cli download <url>                          # download to current directory
+rd-cli download <url> -n filename.mkv          # custom filename
+rd-cli download <url> -p /path/to/dir          # download to specific directory
+rd-cli download <url> -p /path/to/dir -n file  # custom path and filename
 ```
+
+### Batch download from file
+
+Create a text file with one URL per line:
+
+```
+https://rapidgator.net/file/abc
+https://1fichier.com/?xyz
+```
+
+```sh
+rd-cli download -f links.txt                   # batch download to current directory
+rd-cli download -f links.txt -p /path/to/dir   # batch download to specific directory
+```
+
+Failed downloads are logged to stderr and the remaining links continue downloading.
 
 ## Commands
 
@@ -59,8 +75,8 @@ rd-cli download <url> /path/to/dir -n file   # both
 - [x] Download file with progress bar
 - [x] Custom filename via `--name` flag
 - [x] Custom output path as second argument
-- [ ] `--path` flag instead of positional argument
-- [ ] Batch downloading (multiple links from file)
+- [x] `--path` flag instead of positional argument
+- [x] Batch downloading (multiple links from file)
 - [ ] Retry on network error with exponential backoff
 - [ ] Resume interrupted downloads (HTTP Range header)
 
