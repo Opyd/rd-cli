@@ -11,10 +11,11 @@ type ProgressBar struct {
 	writer      io.Writer
 	fullSize    int64
 	currentSize int64
+	fileName    string
 }
 
-func NewProgressBar(writer io.Writer, fullSize int64) *ProgressBar {
-	return &ProgressBar{writer, fullSize, 0}
+func NewProgressBar(writer io.Writer, fullSize int64, fileName string) *ProgressBar {
+	return &ProgressBar{writer, fullSize, 0, fileName}
 }
 
 func (pb *ProgressBar) Write(p []byte) (n int, err error) {
@@ -25,12 +26,12 @@ func (pb *ProgressBar) Write(p []byte) (n int, err error) {
 
 	pb.currentSize += int64(noOfBytes)
 
-	displayHumanReadableProgress(pb.currentSize, pb.fullSize)
+	displayHumanReadableProgress(pb.currentSize, pb.fullSize, pb.fileName)
 
 	return noOfBytes, nil
 }
 
-func displayHumanReadableProgress(cur int64, full int64) {
+func displayHumanReadableProgress(cur int64, full int64, filename string) {
 	base := 1024
 	baseReadable := "KB"
 
@@ -44,5 +45,9 @@ func displayHumanReadableProgress(cur int64, full int64) {
 
 	percentage := float64(cur) / float64(full) * 100
 
-	fmt.Printf("\r %d %s/%d %s %.0f%%", curReadable, baseReadable, fullReadable, baseReadable, percentage)
+	fmt.Printf("\r %s %d %s/%d %s %.0f%%", filename, curReadable, baseReadable, fullReadable, baseReadable, percentage)
+
+	if cur == full {
+		fmt.Println()
+	}
 }

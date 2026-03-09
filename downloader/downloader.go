@@ -37,7 +37,7 @@ func (d *Downloader) Download(url string, filePath string, fileName string) erro
 
 	defer out.Close()
 
-	progress := NewProgressBar(out, resp.ContentLength)
+	progress := NewProgressBar(out, resp.ContentLength, fileName)
 
 	_, err = io.Copy(progress, resp.Body)
 

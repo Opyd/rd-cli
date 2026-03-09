@@ -1,6 +1,9 @@
 package cmd
 
 import (
+	"bufio"
+	"fmt"
+	"os"
 	"rd-cli/api"
 	"rd-cli/config"
 	"rd-cli/downloader"
@@ -16,7 +19,24 @@ var downloadCmd = &cobra.Command{
 Examples:
   rd-cli download https://rapidgator.net/file/example
   rd-cli download https://1fichier.com/?abc123`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
+		var err error
+		var hadErrors bool
+
+		path, _ := cmd.Flags().GetString("path")
+
+		file, _ := cmd.Flags().GetString("file")
+
+		if file != "" {
+			hadErrors, err = processFile(file, path)
+
+			if hadErrors {
+				os.Exit(1)
+			}
+
+			return err
+		}
+
 		if len(args) == 0 {
 			cobra.CheckErr("No link passed")
 		}
@@ -25,38 +45,67 @@ Examples:
 
 		name, _ := cmd.Flags().GetString("name")
 
-		config, err := config.GetConfig()
+		err = processLink(link, path, name)
 
-		if err != nil {
-			cobra.CheckErr(err)
-		}
-
-		apiClient := api.NewClient(config.AccessToken)
-
-		downloadLink, err := apiClient.UnrestrictLink(link)
-
-		if err != nil {
-			cobra.CheckErr(err)
-		}
-
-		if name == "" {
-			name = downloadLink.Filename
-		}
-
-		path, _ := cmd.Flags().GetString("path")
-
-		downloader := downloader.NewDownloader()
-
-		err = downloader.Download(downloadLink.Download, path, name)
-
-		if err != nil {
-			cobra.CheckErr(err)
-		}
+		return err
 	},
+}
+
+func processFile(inputFilePath string, path string) (bool, error) {
+	inputFile, err := os.Open(inputFilePath)
+
+	hasErrors := false
+
+	if err != nil {
+		return false, err
+	}
+
+	defer inputFile.Close()
+
+	scanner := bufio.NewScanner(inputFile)
+
+	for scanner.Scan() {
+		rowLink := scanner.Text()
+		err := processLink(rowLink, path, "")
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to download: %s %v\n", rowLink, err)
+			hasErrors = true
+		}
+	}
+
+	return hasErrors, nil
+}
+
+func processLink(link string, path string, name string) error {
+	config, err := config.GetConfig()
+
+	if err != nil {
+		return err
+	}
+
+	apiClient := api.NewClient(config.AccessToken)
+
+	downloadLink, err := apiClient.UnrestrictLink(link)
+
+	if err != nil {
+		return err
+	}
+
+	if name == "" {
+		name = downloadLink.Filename
+	}
+
+	downloader := downloader.NewDownloader()
+
+	err = downloader.Download(downloadLink.Download, path, name)
+
+	return err
 }
 
 func init() {
 	rootCmd.AddCommand(downloadCmd)
 	downloadCmd.Flags().StringP("name", "n", "", "Custom filename")
 	downloadCmd.Flags().StringP("path", "p", ".", "Custom download path")
+	downloadCmd.Flags().StringP("file", "f", "", "File with links to download")
 }
